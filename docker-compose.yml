@@ -1,0 +1,35 @@
+﻿version: '3.8'
+services:
+  api:
+    image: healthcheck-api
+    build:
+      context: .
+      dockerfile: src/Api/Dockerfile
+    depends_on:
+      - db
+      - redis
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5000:80"
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myusername
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    environment:
+      - REDIS_PASSWORD=redis_pass
+    ports:
+      - "6379:6379"
+
+volumes:
+  pg_data:
